@@ -21,7 +21,7 @@ import { PasteFromOffice } from '@ckeditor/ckeditor5-paste-from-office';
 import { RemoveFormat } from '@ckeditor/ckeditor5-remove-format'; 
 import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
 import { SpecialCharacters, SpecialCharactersEssentials } from '@ckeditor/ckeditor5-special-characters';
-import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
+import { Table, TableToolbar, TableProperties, TableCellProperties } from '@ckeditor/ckeditor5-table';
 import { WordCount } from '@ckeditor/ckeditor5-word-count';
 import MathType from '@wiris/mathtype-ckeditor5';
 
@@ -63,6 +63,8 @@ ClassicEditor.builtinPlugins = [
     SpecialCharactersEssentials,
     Table,
     TableToolbar,
+    TableProperties,
+    TableCellProperties,
     WordCount,
     MathType
 ];
@@ -134,7 +136,7 @@ ClassicEditor.defaultConfig = {
         'previewsInData': 'true'
     },
     table: {
-        'contentToolbar' : [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
+        'contentToolbar' : [ 'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties' ]
     },
     language: 'en'
 };
