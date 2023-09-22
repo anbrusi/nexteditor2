@@ -43,7 +43,15 @@ class dispatcher {
         $html .= '<link rel="stylesheet" href="index.css" />';
         // Import the classic editor script for all pages. Instantiation is made in pages, that need it
         $html .= '<script src="./build/isCkeditor.js"></script>';
-        // $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></script>';
+        // $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></s cript>';
+
+        // Version 2 von mathjax mit cdn laden. Version 3 hat noch nicht alle Funktionen
+        // $html .= '<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>';
+
+        // Version 3
+        $html .= '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>';
+        $html .= '<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
+
         $html .= '</head>';
         return $html;
     }
@@ -51,7 +59,7 @@ class dispatcher {
         $html = '';
         $html .= '<body>';
         $html .= '<h1>nexteditor2</h1>';
-        $html .= '<form action="index.php" method="POST" name="ispencil5_2">';
+        $html .= '<form action="index.php" method="POST" enctype="" name="ispencil5_2">';
         // Get properties transmitted from previous view
         $this->getPersistentValues();
         // Handle POST's of previous view
@@ -160,8 +168,9 @@ class dispatcher {
             } )
             .then( editor => {
                 console.log('editor ready', editor); 
-                CKEditorInspector.attach( editor );
-                iseditor = editor;
+                const wordCountPlugin = editor.plugins.get( 'WordCount' );
+                const wordCountWrapper = document.getElementById( 'word-count' );
+                wordCountWrapper.appendChild( wordCountPlugin.wordCountContainer );
             } )
             .catch( error => {
                 console.error( error );
@@ -183,6 +192,8 @@ class dispatcher {
         $html .= '</div>';
         $html .= '<div class="smallspacer"></div>';
         $html .= '<textarea id="editor" name="content">'.$this->currentHtml.'</textarea>';
+        $html .= '<div class="smallspacer"></div>';
+        $html .= '<div id="word-count"></div>';
         $html .= '<script>';
         $html .= $this->createEditorScript();
         $html .= '</script>';

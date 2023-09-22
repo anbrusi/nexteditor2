@@ -12,6 +12,18 @@ import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
 import { FindAndReplace} from '@ckeditor/ckeditor5-find-and-replace';
 import { Font } from '@ckeditor/ckeditor5-font';
 import { HorizontalLine } from '@ckeditor/ckeditor5-horizontal-line';
+import { SimpleUploadAdapter } from '@ckeditor/ckeditor5-upload';
+import { Image, ImageCaption, ImageResize, ImageStyle, ImageToolbar, ImageUpload } from '@ckeditor/ckeditor5-image';
+import { Indent, IndentBlock } from'@ckeditor/ckeditor5-indent';
+import { MediaEmbed } from '@ckeditor/ckeditor5-media-embed';
+import { PageBreak } from '@ckeditor/ckeditor5-page-break';
+import { PasteFromOffice } from '@ckeditor/ckeditor5-paste-from-office';
+import { RemoveFormat } from '@ckeditor/ckeditor5-remove-format'; 
+import { SourceEditing } from '@ckeditor/ckeditor5-source-editing';
+import { SpecialCharacters, SpecialCharactersEssentials } from '@ckeditor/ckeditor5-special-characters';
+import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
+import { WordCount } from '@ckeditor/ckeditor5-word-count';
+import MathType from '@wiris/mathtype-ckeditor5';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -32,7 +44,27 @@ ClassicEditor.builtinPlugins = [
     Paragraph,
     FindAndReplace,
     Font,
-    HorizontalLine
+    HorizontalLine,
+    SimpleUploadAdapter,
+    ImageUpload,
+    Image,
+    ImageCaption,
+    ImageResize,
+    ImageStyle,
+    ImageToolbar,
+    Indent,
+    IndentBlock,
+    MediaEmbed,
+    PageBreak,
+    PasteFromOffice,
+    RemoveFormat,
+    SourceEditing,
+    SpecialCharacters,
+    SpecialCharactersEssentials,
+    Table,
+    TableToolbar,
+    WordCount,
+    MathType
 ];
 
 ClassicEditor.defaultConfig = {
@@ -62,8 +94,47 @@ ClassicEditor.defaultConfig = {
             'fontColor',
             'fontBackgroundColor',
             '|',
-            'horizontalLine'
+            'horizontalLine',
+            '|',
+            'uploadImage',
+            '|',
+            'outdent',
+            'indent',
+            '|',
+            'mediaEmbed',
+            '|',
+            'pageBreak',
+            '|',
+            'removeFormat',
+            '|',
+            'sourceEditing',
+            '|',
+            'specialCharacters',
+            '|',
+            'insertTable',
+            '|',
+            'MathType',
+            'ChemType'
         ]
+    },
+	image: {
+		toolbar: [
+			'imageStyle:inline',
+			'imageStyle:block',
+			'imageStyle:side',
+			'|',
+			'toggleImageCaption',
+			'imageTextAlternative'
+		]
+	},
+    simpleUpload: {
+		uploadUrl: 'https://myeclipse/nexteditor2/isUpload.php'
+	},
+    mediaEmbed: {
+        'previewsInData': 'true'
+    },
+    table: {
+        'contentToolbar' : [ 'tableColumn', 'tableRow', 'mergeTableCells' ]
     },
     language: 'en'
 };
