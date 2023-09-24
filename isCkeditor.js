@@ -130,7 +130,7 @@ ClassicEditor.defaultConfig = {
 		]
 	},
     simpleUpload: {
-		uploadUrl: 'https://myeclipse/nexteditor2/isUpload.php'
+		uploadUrl: './isUpload.php'
 	},
     mediaEmbed: {
         'previewsInData': 'true'
