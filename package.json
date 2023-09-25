@@ -28,6 +28,7 @@
         "CHANGELOG.md"
     ],
     "dependencies": {
+        "@anbrusi/ckeditor5-simple-audio": "github:anbrusi/simple-audio",
         "@ckeditor/ckeditor5-adapter-ckfinder": "39.0.2",
         "@ckeditor/ckeditor5-autoformat": "39.0.2",
         "@ckeditor/ckeditor5-basic-styles": "39.0.2",

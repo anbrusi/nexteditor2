@@ -24,6 +24,7 @@ import { SpecialCharacters, SpecialCharactersEssentials } from '@ckeditor/ckedit
 import { Table, TableToolbar, TableProperties, TableCellProperties } from '@ckeditor/ckeditor5-table';
 import { WordCount } from '@ckeditor/ckeditor5-word-count';
 import MathType from '@wiris/mathtype-ckeditor5';
+import SimpleAudio from '@anbrusi/ckeditor5-simple-audio';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -66,7 +67,8 @@ ClassicEditor.builtinPlugins = [
     TableProperties,
     TableCellProperties,
     WordCount,
-    MathType
+    MathType,
+    SimpleAudio
 ];
 
 ClassicEditor.defaultConfig = {
@@ -116,7 +118,9 @@ ClassicEditor.defaultConfig = {
             'insertTable',
             '|',
             'MathType',
-            'ChemType'
+            'ChemType',
+            '|',
+            'simpleAudioButton'
         ]
     },
 	image: {
