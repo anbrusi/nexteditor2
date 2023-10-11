@@ -25,6 +25,7 @@ import { Table, TableToolbar, TableProperties, TableCellProperties } from '@cked
 import { WordCount } from '@ckeditor/ckeditor5-word-count';
 import MathType from '@wiris/mathtype-ckeditor5';
 import SimpleAudio from '@anbrusi/ckeditor5-simple-audio';
+import IsPencil from '@anbrusi/ckeditor5-ispencil';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -68,7 +69,8 @@ ClassicEditor.builtinPlugins = [
     TableCellProperties,
     WordCount,
     MathType,
-    SimpleAudio
+    SimpleAudio,
+    IsPencil
 ];
 
 ClassicEditor.defaultConfig = {
@@ -120,7 +122,9 @@ ClassicEditor.defaultConfig = {
             'MathType',
             'ChemType',
             '|',
-            'simpleAudioButton'
+            'simpleAudio',
+            '|',
+            'isPencil'
         ]
     },
 	image: {
@@ -135,6 +139,13 @@ ClassicEditor.defaultConfig = {
 	},
     simpleUpload: {
 		uploadUrl: './isUpload.php'
+	},
+    isPencil: {
+		width: 400,
+		height: 400,
+		position: 'center',
+		hasBorder: false,
+		toolbar: [ 'isPencilLeft', 'isPencilCenter', 'isPencilRight' ]
 	},
     mediaEmbed: {
         'previewsInData': 'true'
