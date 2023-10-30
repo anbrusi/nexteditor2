@@ -153,5 +153,12 @@ ClassicEditor.defaultConfig = {
     table: {
         'contentToolbar' : [ 'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties' ]
     },
+    // MathType Parameters
+    mathTypeParameters : {
+        serviceProviderProperties : {
+            URI : 'https://myeclipse/nexteditor2/php-services',
+            server : 'php'
+        }
+    },
     language: 'en'
 };

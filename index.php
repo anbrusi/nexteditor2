@@ -43,6 +43,7 @@ class dispatcher {
         $html .= '<link rel="stylesheet" href="index.css" />';
         // Import the classic editor script for all pages. Instantiation is made in pages, that need it
         $html .= '<script src="./build/isCkeditor.js"></script>';
+        $html .= '<script src="./build/translations/de.js"></script>';
         // $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></s cript>';
 
         // Version 2 von mathjax mit cdn laden. Version 3 hat noch nicht alle Funktionen
@@ -164,7 +165,7 @@ class dispatcher {
         let iseditor;
         ClassicEditor
             .create( document.querySelector( '#editor' ), {
-               
+               language: 'de'
             } )
             .then( editor => {
                 console.log('editor ready', editor); 
