@@ -153,6 +153,7 @@ ClassicEditor.defaultConfig = {
     table: {
         'contentToolbar' : [ 'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties' ]
     },
+    /* Nicht im Default aufnehmen, sondern in der Instantierung
     // MathType Parameters
     mathTypeParameters : {
         serviceProviderProperties : {
@@ -160,5 +161,6 @@ ClassicEditor.defaultConfig = {
             server : 'php'
         }
     },
+    */
     language: 'en'
 };
