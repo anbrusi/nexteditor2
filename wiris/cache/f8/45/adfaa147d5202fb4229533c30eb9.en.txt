@@ -1,0 +1,1 @@
+{"result":{"text":"cube root of 8 equals 2"},"status":"ok"}
