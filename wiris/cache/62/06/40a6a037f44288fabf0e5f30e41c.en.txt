@@ -1,0 +1,1 @@
+{"result":{"text":"sum from i equals 1 to infinity of 1 over i squared equals 2"},"status":"ok"}

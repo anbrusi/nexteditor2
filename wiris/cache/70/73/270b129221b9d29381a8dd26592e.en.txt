@@ -1,0 +1,1 @@
+{"result":{"text":"integral subscript 0 superscript 2 pi end superscript sin left parenthesis x right parenthesis d x space equals space 0"},"status":"ok"}

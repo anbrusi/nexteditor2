@@ -49,8 +49,11 @@ class dispatcher {
         // $html .= '<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>';
 
         // Version 3
-        $html .= '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>';
-        $html .= '<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
+        // $html .= '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>';
+        // $html .= '<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
+
+        // Wiris client rendering. Can coexist with mathjax version 3. Replaces matjax after a moment. Ugly effect
+        $html .= '<script src="https://www.wiris.net/demo/plugins/app/WIRISplugins.js?viewer=image"></script>';
 
         $html .= '</head>';
         return $html;
@@ -164,7 +167,12 @@ class dispatcher {
         let iseditor;
         ClassicEditor
             .create( document.querySelector( '#editor' ), {
-               
+                mathTypeParameters: {
+                    serviceProviderProperties: {
+                        URI: 'https://myeclipse/nexteditor2/wiris/integration',
+                        server: 'php'
+                    }
+                }
             } )
             .then( editor => {
                 console.log('editor ready', editor); 
