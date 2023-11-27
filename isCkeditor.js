@@ -68,9 +68,9 @@ ClassicEditor.builtinPlugins = [
     TableProperties,
     TableCellProperties,
     WordCount,
-    MathType,
     SimpleAudio,
-    IsPencil
+    IsPencil,
+    MathType
 ];
 
 ClassicEditor.defaultConfig = {
@@ -119,12 +119,12 @@ ClassicEditor.defaultConfig = {
             '|',
             'insertTable',
             '|',
-            'MathType',
-            'ChemType',
-            '|',
             'simpleAudio',
             '|',
-            'isPencil'
+            'isPencil',
+            '|',
+            'MathType',
+            'ChemType'
         ]
     },
 	image: {
