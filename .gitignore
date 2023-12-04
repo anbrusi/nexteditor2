@@ -5,5 +5,7 @@ testdocuments/
 #Exclude wiris user data
 wiris/cache/
 wiris/formulas/
+wiriscache/
+wirisformulas/
 
 

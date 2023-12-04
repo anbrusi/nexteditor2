@@ -1,1 +1,0 @@
-{"result":{"text":"product for i of a subscript i over b subscript i"},"status":"ok"}
