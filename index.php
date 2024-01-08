@@ -62,6 +62,8 @@ class dispatcher {
         $html = '';
         $html .= '<body>';
         $html .= '<h1>nexteditor2</h1>';
+        $html .= '<div>Current view: '.$this->currentView.'</div>';
+        $html .= '<div class="smallspacer"></div>';
         $html .= '<form action="index.php" method="POST" enctype="" name="ispencil5_2">';
         // Get properties transmitted from previous view
         $this->getPersistentValues();
@@ -135,34 +137,11 @@ class dispatcher {
         $html .= '<input type="submit" name="load" value="load" />';
         $html .= '<input type="submit" name="new" value="new document" />';
         $html .= '<input type="submit" name="view" value="view" />'; 
+        $html .= '<input type="submit" name="textarea" value="show in textarea" />';
         return $html;
     }
     private function createEditorScript():string {
         $txt = '';
-        /*
-        $txt .= <<<'EOD'
-        let iseditor;
-        ClassicEditor
-            .create( document.querySelector( '#editor' ), {
-                // Configuration details.
-                isPencil: {
-                    width: 800,
-                    height: 200,
-                    hasBorder: true,
-                    position: "center"
-                }
-            } )
-            .then( editor => {
-                console.log('editor ready', editor); 
-                CKEditorInspector.attach( editor );
-                iseditor = editor;
-            } )
-            .catch( error => {
-                console.error( error );
-            });
-        EOD;
-        */
-
         $txt .= <<<'EOD'
         let iseditor;
         ClassicEditor
@@ -199,7 +178,8 @@ class dispatcher {
         $html .= '<input type="text", name="docuname" value="'.$this->currentDocument.'" />';
         $html .= '</div>';
         $html .= '<div class="smallspacer"></div>';
-        $html .= '<textarea id="editor" name="content">'.$this->currentHtml.'</textarea>';
+        $content = str_replace('&','&amp;', $this->currentHtml);
+        $html .= '<textarea id="editor" name="content">'.$content.'</textarea>';
         $html .= '<div class="smallspacer"></div>';
         $html .= '<div id="word-count"></div>';
         $html .= '<script>';
@@ -228,6 +208,22 @@ class dispatcher {
         return $html;
     }
 
+    private function textareaView():string {
+        $html = '';
+        $html .= '<div>';
+        $html .= 'Textarea view of document:&nbsp;&nbsp;'.$this->currentDocument;
+        $html .= '<div class="smallspacer"></div>';
+        $html .= '<div>';
+        $html .= '<textarea cols="80" rows=24>';
+        $content = str_replace('&', '&amp;', $this->currentHtml);
+        $html .= $content;
+        $html .= '</textarea>';
+        $html .= '</div>';
+        $html .= '<div class="smallspacer"></div>';
+        $html .= '<input type="submit" name="escape" value="escape" />';
+        return $html;
+    }
+
     /**
      * Returns HTML for the view $this->currentView
      * 
@@ -239,8 +235,10 @@ class dispatcher {
                 return $this->testdocumentView();
             case 'editorView':
                 return $this->editorView();
-            case 'viewingView';
+            case 'viewingView':
                 return $this->viewingView();
+            case 'textareaView':
+                return $this->textareaView();
             default:
                 return 'missing view';
         }
@@ -251,7 +249,7 @@ class dispatcher {
      * 
      * @return void 
      */
-    private function handleTestdocument() {
+    private function handleTestdocument():void {
         if (isset($_POST['load']) && isset($_POST['testdocuments'])) {
             $this->currentHtml = file_get_contents(self::TESTDOCUMENTS.$_POST['testdocuments']);
             $this->currentDocument = $_POST['testdocuments'];
@@ -262,6 +260,10 @@ class dispatcher {
             $this->currentHtml = file_get_contents(self::TESTDOCUMENTS.$_POST['testdocuments']);
             $this->currentDocument = $_POST['testdocuments'];
             $this->currentView = 'viewingView';
+        } elseif ( isset($_POST['textarea']) && isset($_POST['testdocuments']) ) {
+            $this->currentHtml = file_get_contents(self::TESTDOCUMENTS.$_POST['testdocuments']);
+            $this->currentDocument = $_POST['testdocuments'];
+            $this->currentView = 'textareaView';
         }
     }
     /**
@@ -269,7 +271,7 @@ class dispatcher {
      * 
      * @return void 
      */
-    private function handleEditor() {
+    private function handleEditor():void {
         if (isset($_POST['escape'])) {
             $this->currentView = 'testdocumentView';
         } elseif (isset($_POST['store'])) {
@@ -278,6 +280,22 @@ class dispatcher {
         }
     }
 
+    /**
+     * Handler responding to POST of textareaView
+     * 
+     * @return void 
+     */
+    private function handleTextarea():void {
+        if (isset($_POST['escape'])) {
+            $this->currentView = 'testdocumentView';
+        }
+    }
+
+    /**
+     * Handler responding to POST of viewingView
+     * 
+     * @return void 
+     */
     private function handleView() {
         if (isset($_POST['escape'])) {
             $this->currentView = 'testdocumentView';
@@ -289,11 +307,14 @@ class dispatcher {
             case 'testdocumentView':
                 $this->handleTestdocument();
                 break;
-            case 'editorView';
+            case 'editorView':
                 $this->handleEditor();
                 break;
-            case 'viewingView';
+            case 'viewingView':
                 $this->handleView();
+                break;
+            case 'textareaView':
+                $this->handleTextarea();
                 break;
             default:
                 echo 'missing handler';

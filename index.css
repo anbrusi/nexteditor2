@@ -1,6 +1,9 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
 }
+textarea {
+    font-size: 120%;
+}
 .smallspacer {
     height: 10px;
 }
