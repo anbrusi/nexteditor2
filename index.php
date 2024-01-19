@@ -53,7 +53,7 @@ class dispatcher {
         // $html .= '<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
 
         // Wiris client rendering. Can coexist with mathjax version 3. Replaces matjax after a moment. Ugly effect
-        $html .= '<script src="https://www.wiris.net/demo/plugins/app/WIRISplugins.js?viewer=image"></script>';
+        $html .= '<script src="https://myeclipse/nexteditor2/wiris/integration/WIRISplugins.js?viewer=image"></script>';
 
         $html .= '</head>';
         return $html;
