@@ -41,6 +41,7 @@ class dispatcher {
         $html .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
         $html .= '<title>inexteditor2</title>';
         $html .= '<link rel="stylesheet" href="index.css" />';
+        $html .= '<link rel="stylesheet" href="content-styles.css"/>';
         // Import the classic editor script for all pages. Instantiation is made in pages, that need it
         $html .= '<script src="./build/isCkeditor.js"></script>';
         // $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></s cript>';
@@ -200,7 +201,7 @@ class dispatcher {
         $html = '';
         $html .= '<div>';
         $html .= 'View of document:&nbsp;&nbsp;'.$this->currentDocument;
-        $html .= '<div style="margin: 20px; padding: 10px; border: 1px solid blue;">';
+        $html .= '<div style="margin: 20px; padding: 10px; border: 1px solid blue;" class="ck-content">';
         $html .= $this->currentHtml;
         $html .= '</div>';
         $html .= '<div class="smallspacer"></div>';
