@@ -44,7 +44,7 @@ class dispatcher {
         $html .= '<link rel="stylesheet" href="content-styles.css"/>';
         // Import the classic editor script for all pages. Instantiation is made in pages, that need it
         $html .= '<script src="./build/isCkeditor.js"></script>';
-        // $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></s cript>';
+        $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></script>';
 
         // Version 2 von mathjax mit cdn laden. Version 3 hat noch nicht alle Funktionen
         // $html .= '<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>';
@@ -158,6 +158,7 @@ class dispatcher {
             } )
             .then( editor => {
                 console.log('editor ready', editor); 
+                CKEditorInspector.attach( editor );
                 const wordCountPlugin = editor.plugins.get( 'WordCount' );
                 const wordCountWrapper = document.getElementById( 'word-count' );
                 wordCountWrapper.appendChild( wordCountPlugin.wordCountContainer );
@@ -188,10 +189,6 @@ class dispatcher {
         $html .= '<script>';
         $html .= $this->createEditorScript();
         $html .= '</script>';
-
-        $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></script>';
-
-
         $html .= '<div class="smallspacer"></div>';
         $html .= '<input type="submit" name="escape" value="escape" />';
         $html .= '<input type="submit" name="store" value="store" />';
