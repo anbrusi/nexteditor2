@@ -63,13 +63,14 @@ class dispatcher {
         $html = '';
         $html .= '<body>';
         $html .= '<h1>nexteditor2</h1>';
-        $html .= '<div>Current view: '.$this->currentView.'</div>';
         $html .= '<div class="smallspacer"></div>';
         $html .= '<form action="index.php" method="POST" enctype="" name="ispencil5_2">';
         // Get properties transmitted from previous view
         $this->getPersistentValues();
         // Handle POST's of previous view
         $html .= $this->handle();
+        $html .= '<div>Current view: '.$this->currentView.'</div>';
+        $html .= '<div class="smallspacer"></div>';
         // Render the current view
         $html .= $this->render();
         // Store persistent properties for the benefit of the next view
@@ -139,6 +140,7 @@ class dispatcher {
         $html .= '<input type="submit" name="new" value="new document" />';
         $html .= '<input type="submit" name="view" value="view" />'; 
         $html .= '<input type="submit" name="textarea" value="show in textarea" />';
+        $html .= '<input type="submit" name="delete" value="delete" />'; 
         return $html;
     }
     private function createEditorScript():string {
@@ -186,6 +188,10 @@ class dispatcher {
         $html .= '<script>';
         $html .= $this->createEditorScript();
         $html .= '</script>';
+
+        $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></script>';
+
+
         $html .= '<div class="smallspacer"></div>';
         $html .= '<input type="submit" name="escape" value="escape" />';
         $html .= '<input type="submit" name="store" value="store" />';
@@ -265,6 +271,9 @@ class dispatcher {
             $this->currentHtml = file_get_contents(self::TESTDOCUMENTS.$_POST['testdocuments']);
             $this->currentDocument = $_POST['testdocuments'];
             $this->currentView = 'textareaView';
+        } elseif ( isset($_POST['delete'])) {
+            $this->currentDocument = $_POST['testdocuments'];
+            unlink(self::TESTDOCUMENTS.$_POST['testdocuments']);
         }
     }
     /**
