@@ -283,6 +283,7 @@ class dispatcher {
             $this->currentView = 'testdocumentView';
         } elseif (isset($_POST['store'])) {
             file_put_contents(self::TESTDOCUMENTS.$_POST['docuname'], $_POST['content']);
+            chmod(self::TESTDOCUMENTS.$_POST['docuname'], 0777);
             $this->currentView = 'testdocumentView';
         }
     }
