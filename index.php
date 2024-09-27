@@ -2,9 +2,25 @@
 class dispatcher {
 
     /**
+     * This sets the default for $this->useMathjax
+     */
+    const USE_MATHJAX = false;
+
+    /**
+     * This sets the default for $this->useWiris
+     */
+    const USE_WIRIS = false;
+
+    /**
      * Document root relative path of test documents
      */
     const TESTDOCUMENTS = './testdocuments/';
+
+    /**
+     * Document root relative path of configuration file, which is in json format
+     * It stores the values for $this->useMathjax and $this->useWiris.
+     */
+    const CONFIGURATION_FILE = './testdocuments/.configuration.json';
 
     /**
      * Array elements are names of properties persisted by setting hidden POSTs for their values.
@@ -12,6 +28,20 @@ class dispatcher {
      * $this->getPersistentValues sets these properties from the hidden POSTs if present.
      */
     const PERSITENT_VARS = ['currentView', 'currentDocument'];
+
+    /**
+     * If true mathjax is loaded in the header, else mathjax is not available
+     * 
+     * @var bool
+     */
+    private bool $useMathjax;
+
+    /**
+     * If false, WIRIS plugins are disabled when CKEditor is created
+     * 
+     * @var bool
+     */
+    private bool $useWiris;
 
     /**
      * Name of the current view
@@ -26,13 +56,63 @@ class dispatcher {
      */
     private $currentDocument = 'newDocument';
 
-
     /**
      * Current document content
      * 
      * @var string
      */
     private $currentHtml = '';
+
+    /**
+     * A possible error message
+     * 
+     * @var string
+     */
+    private string $errmess = '';
+
+    public function __construct()
+    {
+        error_reporting(E_ALL & ~E_WARNING);
+        $this->useMathjax = self::USE_MATHJAX;
+        $this->useWiris = self::USE_WIRIS;
+        // Override the values, if a valid configuration is found
+        if (!$this->getConfiguration()) {
+            $this->errmess = 'No stored configuration available';
+        }
+    }
+
+    /**
+     * Overrides the configuration in $this->useMathjax and $this->useWiris, if a valid configuration file is found
+     * 
+     * @return bool 
+     */
+    private function getConfiguration():bool {
+        $json = file_get_contents(self::CONFIGURATION_FILE);
+        if ( $json ) {
+            $configuration = json_decode($json, true);
+            if ($configuration !== NULL && isset($configuration['useMathjax']) && isset($configuration['useWiris'])) {
+                $this->useMathjax = $configuration['useMathjax'];
+                $this->useWiris = $configuration['useWiris'];
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private function setConfiguration(bool $useMathjax, bool $useWiris):bool {
+        $configuration = [ 'useMathjax' => $useMathjax, 'useWiris' => $useWiris ];
+        $json = json_encode($configuration);
+        if ($json === false) {
+            return false;
+        } else {
+            $bytes = file_put_contents(self::CONFIGURATION_FILE, $json);
+            if ($bytes === false) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private function header():string {
         $html = '';
@@ -46,17 +126,20 @@ class dispatcher {
         $html .= '<script src="./build/isCkeditor.js"></script>';
         $html .= '<script src="./node_modules/@ckeditor/ckeditor5-inspector/build/inspector.js"></script>';
 
-        // Version 2 von mathjax mit cdn laden. Version 3 hat noch nicht alle Funktionen
-        // $html .= '<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>';
+        if ($this->useMathjax) {
+            // Version 2 von mathjax mit cdn laden. Version 3 hat noch nicht alle Funktionen
+            // $html .= '<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_CHTML"></script>';
 
-        // Version 3
-        // $html .= '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>';
-        // $html .= '<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
+            // Version 3
+            // $html .= '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>';
+            // $html .= '<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
 
-        $html .= '<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
-        
-        // Wiris client rendering. Can coexist with mathjax version 3. Replaces matjax after a moment. Ugly effect
-        $html .= '<script src="https://myeclipse/nexteditor2/wiris/integration/WIRISplugins.js?viewer=image"></script>';
+            $html .= '<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
+        }
+        if ($this->useWiris) {
+            // Wiris client rendering. Can coexist with mathjax version 3. Replaces matjax after a moment. Ugly effect
+            $html .= '<script src="https://myeclipse/nexteditor2/wiris/integration/WIRISplugins.js?viewer=image"></script>';
+        }
 
         $html .= '</head>';
         return $html;
@@ -148,10 +231,13 @@ class dispatcher {
         $html .= '<input type="submit" name="view" value="view" />'; 
         $html .= '<input type="submit" name="textarea" value="show in textarea" />';
         $html .= '<input type="submit" name="delete" value="delete" />'; 
+        $html .= '<input type="submit" name="configuration" value="configuration" />';
         return $html;
     }
     private function createEditorScript():string {
         $txt = '';
+
+        /*
         $txt .= <<<'EOD'
         let iseditor;
         ClassicEditor
@@ -174,7 +260,38 @@ class dispatcher {
                 console.error( error );
             });
         EOD;
+        */
 
+        if ($this->useWiris) {
+            $config = <<<'EOD'
+            {
+                mathTypeParameters: {
+                    serviceProviderProperties: {
+                        URI: 'https://myeclipse/nexteditor2/wiris/integration',
+                        server: 'php'
+                    }
+                }
+            }
+            EOD;
+        } else {
+            $config = <<<'EOD'
+            { 
+                removePlugins:['MathType','ChemType']
+            }
+            EOD;
+        }
+        $thenStmt = <<<'EOD'
+        {
+            console.log('editor ready', editor); 
+            CKEditorInspector.attach( editor );
+            const wordCountPlugin = editor.plugins.get( 'WordCount' );
+            const wordCountWrapper = document.getElementById( 'word-count' );
+            wordCountWrapper.appendChild( wordCountPlugin.wordCountContainer );
+        }
+        EOD;
+        $txt = 'ClassicEditor.create( document.querySelector( \'#editor\'), '.$config.')'.
+               '.then( editor => '.$thenStmt.' )'. 
+               '.catch( error => { console.log( error ); });';
         return $txt;
     }
     /**
@@ -235,6 +352,34 @@ class dispatcher {
         return $html;
     }
 
+    private function configurationView():string {
+        $html = '';
+        $html .= '<div>';
+        $html .= 'View of document:&nbsp;&nbsp;'.$this->currentDocument;
+        $html .= '<div style="margin: 20px; padding: 10px; border: 1px solid blue;" class="ck-content">';
+        $html .= 'Choose an appropriate configuration';
+        $html .= '<div class="smallspacer"></div>';
+        if ($this->useMathjax) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
+        $html .= '<input type="checkbox" id="useMathjax" name="useMathjax" value="useMathjax" '.$checked.' />';
+        $html .= '<label for="useMathjax"> use Mathjax</label><br>';
+        if ($this->useWiris) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
+        $html .= '<input type="checkbox" id="useWiris" name="useWiris" value="useWiris" '.$checked.' />';
+        $html .= '<label for="useWiris"> use WIRIS</label><br>';
+        $html .= '</div>';
+        $html .= '<div class="smallspacer"></div>';
+        $html .= '<input type="submit" name="store" value="store" />';
+        $html .= '<input type="submit" name="escape" value="escape" />';
+        return $html;
+    }
+
     /**
      * Returns HTML for the view $this->currentView
      * 
@@ -250,6 +395,8 @@ class dispatcher {
                 return $this->viewingView();
             case 'textareaView':
                 return $this->textareaView();
+            case 'configurationView';
+                return $this->configurationView();
             default:
                 return 'missing view';
         }
@@ -278,6 +425,8 @@ class dispatcher {
         } elseif ( isset($_POST['delete'])) {
             $this->currentDocument = $_POST['testdocuments'];
             unlink(self::TESTDOCUMENTS.$_POST['testdocuments']);
+        } elseif ( isset($_POST['configuration'])) {
+            $this->currentView = 'configurationView';
         }
     }
     /**
@@ -317,6 +466,34 @@ class dispatcher {
         }
     }
 
+    /**
+     * Handler responding to POST's of configurationView
+     * 
+     * @return void 
+     */
+    private function handleConfiguration() {
+        if (isset($_POST['store'])) {
+            if (isset($_POST['useMathjax'])) {
+                $this->useMathjax = true;
+            } else {
+                $this->useMathjax = false;
+            }
+            if (isset($_POST['useWiris'])) {
+                $this->useWiris = true;
+            } else {
+                $this->useWiris = false;
+            }
+            if (!$this->setConfiguration($this->useMathjax, $this->useWiris)) {
+                $this->errmess = 'Cannot store the configuration';
+                $this->currentView = 'configurationView';
+            } else {
+                $this->currentView = 'testdocumentView';
+            }
+        } elseif (isset($_POST['escape'])) {
+            $this->currentView = 'testdocumentView';
+        }
+    }
+
     private function handle() {
         switch ($this->currentView) {
             case 'testdocumentView':
@@ -330,6 +507,9 @@ class dispatcher {
                 break;
             case 'textareaView':
                 $this->handleTextarea();
+                break;
+            case 'configurationView':
+                $this->handleConfiguration();
                 break;
             default:
                 echo 'missing handler';
