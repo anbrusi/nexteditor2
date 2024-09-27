@@ -53,6 +53,8 @@ class dispatcher {
         // $html .= '<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>';
         // $html .= '<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
 
+        $html .= '<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>';
+        
         // Wiris client rendering. Can coexist with mathjax version 3. Replaces matjax after a moment. Ugly effect
         $html .= '<script src="https://myeclipse/nexteditor2/wiris/integration/WIRISplugins.js?viewer=image"></script>';
 
@@ -128,8 +130,13 @@ class dispatcher {
         $content = scandir(self::TESTDOCUMENTS);
         if ($content !== false) {
             foreach ($content as $file) {
-                if ($file != '.' && $file != '..') {
-                    $html .= '<input type="radio" name="testdocuments" value="'.$file.'" id="'.$file.'" />';
+                if ($file != '.' && $file != '..' && $file != '' && $file[0] != '.') {
+                    if ($file == $this->currentDocument) {
+                        $checked = 'checked="checked"';
+                    } else {
+                        $checked = '';
+                    }
+                    $html .= '<input type="radio" name="testdocuments" value="'.$file.'" id="'.$file.'" '.$checked.'/>';
                     $html .= '<label for "'.$file.'">&nbsp;'.$file.'</label><br>';
                 }
             }
